@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ################################################################################
 # 
 # Copyright (c) 2018 NUAA AeroLab
@@ -12,3 +12,9 @@
 # Modified By:    Jiang Yang (pokerpoke@qq.com)
 # 
 ################################################################################
+
+python3 -m venv venv
+
+source ./venv/bin/active
+
+pip install -r requirements.txt

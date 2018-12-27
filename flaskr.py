@@ -14,25 +14,27 @@ CONNECTED = False
 
 @app.route("/")
 def index():
-    return "hello"
+    return "hello, aero-drone"
 
 
 @app.route('/connect')
 def connect_():
     global vehicle
+    global CONNECTED
 
-    vehicle = connect("127.0.0.1:14555", wait_ready=True)
+    vehicle = connect("127.0.0.1:14550", wait_ready=True)
     # vehicle = connect("/dev/ttyACM0", wait_ready=True)
     CONNECTED = True
-    return str("done").encode('utf-8')
+    return "done".encode('utf-8')
 
 
 @app.route('/takeoff')
 def takeoff():
     global vehicle
+    global CONNECTED
 
     if (not CONNECTED):
-        vehicle = connect("127.0.0.1:14555", wait_ready=True)
+        vehicle = connect("127.0.0.1:14550", wait_ready=True)
 
     arm_and_take_off(vehicle, 5)
 
@@ -47,6 +49,7 @@ def land():
     vehicle.close()
 
     return "done".encode('utf-8')
+
 
 if __name__ == "__main__":
     app.run()

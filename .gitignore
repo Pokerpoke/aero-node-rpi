@@ -1,6 +1,6 @@
 .vscode
 __pycache__
-.pyc
+*.pyc
 *log
 *.parm
 *.raw
