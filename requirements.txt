@@ -1,7 +1,10 @@
+certifi==2018.11.29
+chardet==3.0.4
 Click==7.0
 dronekit==2.9.1
 Flask==1.0.2
 future==0.17.1
+idna==2.8
 iso8601==0.1.12
 itsdangerous==1.1.0
 Jinja2==2.10
@@ -12,5 +15,7 @@ monotonic==1.2
 pymavlink==2.3.1
 pyserial==3.4
 PyYAML==3.13
+requests==2.21.0
 serial==0.0.70
+urllib3==1.24.1
 Werkzeug==0.14.1

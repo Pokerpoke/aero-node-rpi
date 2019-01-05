@@ -12,9 +12,15 @@
 # Modified By:    Jiang Yang (pokerpoke@qq.com)
 # 
 ################################################################################
+set -e
+# get scripts path
+SCRIPT_DIR=$(dirname $(readlink -f $0))
+cd ${SCRIPT_DIR}/..
+PROJECT_DIR=$(pwd)
+cd ${PROJECT_DIR}
 
 python3 -m venv venv
 
-source ./venv/bin/active
+source ./venv/bin/activate
 
 pip install -r requirements.txt
