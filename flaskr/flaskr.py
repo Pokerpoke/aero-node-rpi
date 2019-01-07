@@ -67,8 +67,8 @@ def goto_():
     global CONNECTED
 
     if not CONNECTED:
-        vehicle = connect("127.0.0.1:14550", wait_ready=True)
-        CONNECTED = True
+        session["url"] = "/goto"
+        return redirect("/connect")
 
     n = float(request.args.get("n", 0))
     e = float(request.args.get("e", 0))
@@ -99,6 +99,7 @@ def status():
                        lat=vehicle.location.global_frame.lat,
                        long=vehicle.location.global_frame.lon,
                        alt=vehicle.location.global_frame.alt,
+                       armed=vehicle.armed
                        )
 
 
