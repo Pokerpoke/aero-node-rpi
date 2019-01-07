@@ -25,7 +25,8 @@ def connect_():
     global vehicle
     global CONNECTED
 
-    vehicle = connect("127.0.0.1:14550", wait_ready=True)
+    # vehicle = connect("127.0.0.1:14550", wait_ready=True)
+    vehicle = connect("/dev/ttyACM0", wait_ready=True)
     CONNECTED = True
     if "url" in session:
         return redirect(session["url"])
@@ -69,11 +70,11 @@ def goto_():
         vehicle = connect("127.0.0.1:14550", wait_ready=True)
         CONNECTED = True
 
-    n = request.args.get("n", 0)
-    e = request.args.get("e", 0)
-    d = request.args.get("d", None)
+    n = float(request.args.get("n", 0))
+    e = float(request.args.get("e", 0))
+    d = float(request.args.get("d", 0))
 
-    if d != None:
+    if d != 0:
         goto(vehicle, n, e, d)
     else:
         goto(vehicle, n, e)

@@ -16,6 +16,7 @@ Modified By:    Jiang Yang (pokerpoke@qq.com)
 """
 import requests
 import threading
+import time
 
 targets = ["127.0.0.1",
            "192.168.0.9"]
@@ -39,3 +40,8 @@ for url in urls:
     threads.append(threading.Thread(target=takeoff(url)))
     threads[-1].setDaemon(True)
     threads[-1].start
+
+
+time.sleep(10)
+
+r = requests.get("http://127.0.0.1:5000/goto?n=10&e=10")
