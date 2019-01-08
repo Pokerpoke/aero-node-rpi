@@ -19,6 +19,11 @@ cd ${SCRIPT_DIR}/..
 PROJECT_DIR=$(pwd)
 cd ${PROJECT_DIR}
 
+sudo apt-get update
+sudo apt-get install supervisor
+
+sudo cp ${PROJECT_DIR}/supervisor/supervisor.conf /etc/supervisor/supervisor.conf
+
 python3 -m venv venv
 
 source ./venv/bin/activate

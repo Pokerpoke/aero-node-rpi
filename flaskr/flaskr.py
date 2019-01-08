@@ -54,6 +54,10 @@ def land():
     global vehicle
     global CONNECTED
 
+    if not CONNECTED:
+        session["url"] = "/land"
+        return redirect("/connect")
+
     vehicle.mode = VehicleMode("LAND")
     vehicle.close()
     CONNECTED = False
