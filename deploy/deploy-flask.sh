@@ -22,7 +22,7 @@ cd ${PROJECT_DIR}
 sudo apt-get update
 sudo apt-get install supervisor
 
-sudo cp ${PROJECT_DIR}/supervisor/supervisor.conf /etc/supervisor/supervisor.conf
+sudo cp ${PROJECT_DIR}/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 
 python3 -m venv venv
 
