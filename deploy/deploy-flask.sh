@@ -19,6 +19,8 @@ cd ${SCRIPT_DIR}/..
 PROJECT_DIR=$(pwd)
 cd ${PROJECT_DIR}
 
+sudo apt-get install -y python3-venv
+
 python3 -m venv venv
 
 source ./venv/bin/activate
