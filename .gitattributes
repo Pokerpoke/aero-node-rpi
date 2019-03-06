@@ -1,0 +1,20 @@
+* text=auto
+
+# Basic .gitattributes for a python repo.
+
+# Source files
+# ============
+*.pxd		text diff=python eof=lf
+*.py 		text diff=python eof=lf
+*.py3 		text diff=python eof=lf
+*.pyw 		text diff=python eof=lf
+*.pyx  		text diff=python eof=lf
+
+# Binary files
+# ============
+*.db		binary
+*.p 		binary
+*.pkl 		binary
+*.pyc 		binary
+*.pyd		binary
+*.pyo 		binary
