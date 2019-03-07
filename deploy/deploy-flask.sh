@@ -20,7 +20,7 @@ PROJECT_DIR=$(pwd)
 cd ${PROJECT_DIR}
 
 sudo apt-get update
-sudo apt-get install -y supervisor python3-venv
+sudo apt-get install -y supervisor python3-venv iftop
 
 sudo cp ${PROJECT_DIR}/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 

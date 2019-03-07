@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
 from flask import (Flask, request, jsonify,
@@ -11,12 +11,16 @@ app = Flask(__name__)
 app.secret_key = "123456"
 
 uav = UAV.UAV()
-uav.connect("127.0.0.1:14550")
 
 
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+@app.route("/connect")
+def connect():
+    uav.connect("127.0.0.1:14550")
 
 
 @app.route("/precheck")
@@ -59,6 +63,31 @@ def status():
                    alt=uav.vehicle.location.global_frame.alt,
                    armed=uav.vehicle.armed
                    )
+
+
+@app.route("/update")
+def update():
+    import subprocess
+    cmd = ["git", "pull"]
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    return (p.stdout.read())
+
+
+@app.route("/restart")
+def restart():
+    import os
+    cmd = ("sudo supervisorctl restart all")
+    os.system(cmd)
+
+
+@app.route("/proxy")
+def proxy():
+    return
+
+
+@app.route("/service_status")
+def service_status():
+    return
 
 
 if __name__ == "__main__":
