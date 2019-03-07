@@ -102,6 +102,14 @@ def update():
     return (p.stdout.read())
 
 
+@app.route('/test')
+def test():
+    import subprocess
+    cmd = ['pwd']
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    return (p.stdout.read())
+
+
 @app.route('/restart')
 def restart():
     import os
