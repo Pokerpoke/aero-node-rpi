@@ -140,7 +140,7 @@ def log_mavproxy():
         return Response(f, mimetype='text/plain')
 
 
-@app.route('/log/flask')
+@app.route('/log/flaskr')
 def log_flask():
     from flask import Response
 
