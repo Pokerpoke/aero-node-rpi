@@ -12,9 +12,13 @@ def arm_and_take_off(vehicle, aTargetAltitude):
 
     print("Basic pre-arm checks")
     # Don't let the user try to arm until autopilot is ready
+    i = 0
     while not vehicle.is_armable:
         print(" Waiting for vehicle to initialise...")
         time.sleep(1)
+        i = i + 1
+        if (i > 30):
+            return
 
     print("Arming motors")
     # Copter should arm in GUIDED mode
