@@ -132,5 +132,21 @@ def service_status():
     )
 
 
+@app.route('/log/mavproxy')
+def log_mavproxy():
+    from flask import Response
+
+    with open('/var/log/mavproxy.log', 'r') as f:
+        return Response(f, mimetype='text/plain')
+
+
+@app.route('/log/flask')
+def log_flask():
+    from flask import Response
+
+    with open('/var/log/flakr.log', 'r') as f:
+        return Response(f, mimetype='text/plain')
+
+
 if __name__ == '__main__':
     app.run()
