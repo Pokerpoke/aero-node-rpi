@@ -152,7 +152,7 @@ def log_mavproxy():
 def log_flask():
     from flask import Response
 
-    with open('log/flakr.log', 'r') as f:
+    with open('log/flaskr.log', 'r') as f:
         return Response(f, mimetype='text/plain')
 
 
