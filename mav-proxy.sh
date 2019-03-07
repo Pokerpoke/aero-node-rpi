@@ -20,7 +20,7 @@ PROJECT_DIR=$(pwd)
 cd ${PROJECT_DIR}
 
 PORT="/dev/ttyACM0"
-SUDO=""
+SUDO="sudo"
 PROXY=""
 
 while getopts p:sr:h OPT
@@ -30,7 +30,7 @@ do
             PORT="${OPTARG}"
             ;;
         s)
-            SUDO="sudo"
+            SUDO=""
             ;;
         r)
             PROXY="--out=udp:${OPTARG}"
@@ -39,7 +39,7 @@ do
             echo "Usage:
     ./mav-proxy.sh -[p:sr:h]
     -p  specify port, '/dev/ttyACM0'
-    -s  use 'sudo' or not
+    -s  use 'sudo' or not, default is use
     -r  proxy data to QGC/Mission Planner or not, 
         default is '192.168.199.246:14550'
     -h  help"
