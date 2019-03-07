@@ -136,7 +136,7 @@ def service_status():
 def log_mavproxy():
     from flask import Response
 
-    with open('/flaskr/log/mavproxy.log', 'r') as f:
+    with open('flaskr/log/mavproxy.log', 'r') as f:
         return Response(f, mimetype='text/plain')
 
 
