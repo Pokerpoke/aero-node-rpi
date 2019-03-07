@@ -26,14 +26,15 @@ def precheck():
 
 @app.route("/takeoff")
 def takeoff():
-    alt = float(request.args.get("alt", 0))
-    if alt != 0:
-        uav.takeoff(alt)
+    alt = float(request.args.get("alt", 5))
+    uav.takeoff(alt)
+    return ("hello")
 
 
 @app.route("/land")
 def land():
     uav.land()
+    return ("hello")
 
 
 @app.route("/goto")
@@ -43,6 +44,7 @@ def goto():
     d = float(request.args.get("d", 0))
 
     uav.goto(n, e, d)
+    return ("hello")
 
 
 @app.route("/status")
