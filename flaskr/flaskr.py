@@ -128,7 +128,7 @@ def service_status():
     return jsonify(
         cpu_percent=psutil.cpu_percent(),
         disk_usage=psutil.disk_usage('/').percent,
-        ip=psutil.net_if_addrs()['wlan0'][1].address
+        ip=psutil.net_if_addrs()['wlan0'][0].address
     )
 
 
