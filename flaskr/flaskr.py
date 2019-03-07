@@ -22,51 +22,66 @@ import UAV
 
 
 app = Flask(__name__)
-app.secret_key = "123456"
+app.secret_key = '123456'
 
 uav = UAV.UAV()
 
 
-@app.route("/")
+@app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template('index.html')
 
 
-@app.route("/connect")
+@app.route('/connect')
 def connect():
-    uav.connect("127.0.0.1:14550")
+    if not uav.connected:
+        uav.connect('127.0.0.1:14550')
+    if 'next_page' in session:
+        r = session['next_page']
+        session['next_page'] = ''
+        return redirect(r)
+    return redirect('/')
 
 
-@app.route("/precheck")
+@app.route('/precheck')
 def precheck():
     return
 
 
-@app.route("/takeoff")
+@app.route('/takeoff')
 def takeoff():
-    alt = float(request.args.get("alt", 5))
+    if not uav.connected:
+        session['next_page'] = '/takeoff'
+        return redirect('/connect')
+    alt = float(request.args.get('alt', 5))
     uav.takeoff(alt)
-    return ("hello")
+    return ('done')
 
 
-@app.route("/land")
+@app.route('/land')
 def land():
+    if not uav.connected:
+        session['next_page'] = '/land'
+        return redirect('/connect')
     uav.land()
-    return ("hello")
+    return ('done')
 
 
-@app.route("/goto")
+@app.route('/goto')
 def goto():
-    n = float(request.args.get("n", 0))
-    e = float(request.args.get("e", 0))
-    d = float(request.args.get("d", 0))
+    n = float(request.args.get('n', 0))
+    e = float(request.args.get('e', 0))
+    d = float(request.args.get('d', 0))
 
     uav.goto(n, e, d)
-    return ("hello")
+    return ('done')
 
 
-@app.route("/status")
+@app.route('/status')
 def status():
+    if not uav.connected:
+        session['next_page'] = '/status'
+        return redirect('/connect')
     return jsonify(connect=uav.connected,
                    mode=uav.vehicle.mode.name.lower(),
                    pitch=uav.vehicle.attitude.pitch,
@@ -79,30 +94,43 @@ def status():
                    )
 
 
-@app.route("/update")
+@app.route('/update')
 def update():
     import subprocess
-    cmd = ["git", "pull"]
+    cmd = ['git', 'pull']
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
     return (p.stdout.read())
 
 
-@app.route("/restart")
+@app.route('/restart')
 def restart():
     import os
-    cmd = ("sudo supervisorctl restart all")
+
+    cmd = ('sudo supervisorctl restart all')
     os.system(cmd)
 
 
-@app.route("/proxy")
+@app.route('/proxy')
 def proxy():
-    return
+    import os
+
+    cmd = ('sudo supervisorctl stop mavproxy')
+    os.system(cmd)
+    cmd = ('sudo supervisorctl start mavproxy-proxy')
+    os.system(cmd)
+    return ('done')
 
 
-@app.route("/service_status")
+@app.route('/service_status')
 def service_status():
-    return
+    import psutil
+
+    return jsonify(
+        cpu_percent=psutil.cpu_percent(),
+        disk_usage=psutil.disk_usage('/').percent,
+        ip=psutil.net_if_addrs()['wlan0'][1].address
+    )
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run()
