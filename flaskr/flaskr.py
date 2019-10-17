@@ -24,11 +24,7 @@ import UAV
 app = Flask(__name__)
 app.secret_key = '123456'
 
-
-@app.before_request
-def before_request():
-    g.uav = UAV.UAV()
-    # g.uav.connect('127.0.0.1:14550')
+uav = UAV.UAV()
 
 
 @app.route('/')
@@ -38,8 +34,8 @@ def index():
 
 @app.route('/connect')
 def connect():
-    if not g.uav.connected:
-        g.uav.connect('127.0.0.1:14550')
+    if not uav.connected:
+        uav.connect('udp:127.0.0.1:14550')
     if 'next_page' in session:
         r = session['next_page']
         session['next_page'] = ''
@@ -49,25 +45,25 @@ def connect():
 
 @app.route('/precheck')
 def precheck():
-    return
+    return ('@TODO')
 
 
 @app.route('/takeoff')
 def takeoff():
-    if not g.uav.connected:
+    if not uav.connected:
         session['next_page'] = '/takeoff'
         return redirect('/connect')
     alt = float(request.args.get('alt', 5))
-    g.uav.takeoff(alt)
+    uav.takeoff(alt)
     return ('done')
 
 
 @app.route('/land')
 def land():
-    if not g.uav.connected:
+    if not uav.connected:
         session['next_page'] = '/land'
         return redirect('/connect')
-    g.uav.land()
+    uav.land()
     return ('done')
 
 
@@ -77,58 +73,43 @@ def goto():
     e = float(request.args.get('e', 0))
     d = float(request.args.get('d', 0))
 
-    g.uav.goto(n, e, d)
+    uav.goto(n, e, d)
     return ('done')
 
-
-@app.route('/goto_north')
-def goto_north():
-    n = float(request.args.get('n', 1))
-    e = float(request.args.get('e', 0))
-    d = float(request.args.get('d', 0))
-
-    g.uav.goto(n, e, d)
-    return ('done')
-
-
-@app.route('/goto_east')
-def goto_east():
-    n = float(request.args.get('n', 0))
-    e = float(request.args.get('e', 1))
-    d = float(request.args.get('d', 0))
-
-    g.uav.goto(n, e, d)
-    return ('done')
-
-
-@app.route('/goto_down')
-def goto_down():
-    n = float(request.args.get('n', 0))
-    e = float(request.args.get('e', 0))
-    d = float(request.args.get('d', 1))
-
-    g.uav.goto(n, e, d)
-    return ('done')
-
+@app.route('/goto/<direction>')
+def goto_direction(direction):
+    if direction == 'north':
+        uav.goto(1,0,0)
+    elif direction == 'south':
+        uav.goto(-1,0,0)
+    elif direction == 'east':
+        uav.goto(0,1,0)
+    elif direction == 'west':
+        uav.goto(0,-1,0)
+    elif direction == 'down':
+        uav.goto(0,0,1)
+    elif direction == 'up':
+        uav.goto(0,0,-1)
+    else:
+        return ('bad operation')
+    return('done')
+    
 
 @app.route('/status')
 def status():
-    # if not g.uav.connected:
-    #     session['next_page'] = '/status'
-    #     return redirect('/connect')
-    if not g.uav.connected:
-        return jsonify(connected=g.uav.connected)
-    else:
-        return jsonify(connected=g.uav.connected,
-                    mode=g.uav.vehicle.mode.name.lower(),
-                    pitch=g.uav.vehicle.attitude.pitch,
-                    roll=g.uav.vehicle.attitude.roll,
-                    yaw=g.uav.vehicle.attitude.yaw,
-                    lat=g.uav.vehicle.location.global_frame.lat,
-                    long=g.uav.vehicle.location.global_frame.lon,
-                    alt=g.uav.vehicle.location.global_frame.alt,
-                    armed=g.uav.vehicle.armed
+    if uav.connected:
+        return jsonify(connected=uav.connected,
+                    mode=uav.vehicle.mode.name.lower(),
+                    pitch=uav.vehicle.attitude.pitch,
+                    roll=uav.vehicle.attitude.roll,
+                    yaw=uav.vehicle.attitude.yaw,
+                    lat=uav.vehicle.location.global_frame.lat,
+                    long=uav.vehicle.location.global_frame.lon,
+                    alt=uav.vehicle.location.global_frame.alt,
+                    armed=uav.vehicle.armed
                     )
+    else:
+        return jsonify(connected=uav.connected)
 
 
 @app.route('/update')

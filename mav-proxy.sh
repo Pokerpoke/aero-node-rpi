@@ -54,8 +54,7 @@ source venv/bin/activate
 
 # Run mavproxy
 ${SUDO} mavproxy.py --master=${PORT} \
-    --sitl 127.0.0.1:5501 \
     ${PROXY} \
-    --out=127.0.0.1:14550
+    --out=udp:127.0.0.1:14550
 
 # Select mission

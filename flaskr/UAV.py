@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 # -*- coding:utf-8 -*-
 """
 
@@ -28,11 +28,14 @@ class UAV(object):
         self.connected = flag
 
     def connect(self, addr):
+        print("start connect")
         self.vehicle = dronekit.connect(addr, wait_ready=True)
         if self.vehicle == None:
             self.set_connected(False)
         else:
             self.set_connected(True)
+        print(self.connected)
+        print("stop connect")
 
     def precheck(self):
         return
@@ -42,13 +45,23 @@ class UAV(object):
         aerodrone.arm_and_take_off(self.vehicle, alt)
 
     def goto(self, n=0, e=0, d=0):
-        aerodrone.goto(self.vehicle, n, e, d)
+        if (d==0):
+            aerodrone.goto(self.vehicle, n, e)
+        else:
+            # aerodrone.send_ned_velocity(self.vehicle,0,0,d,1)
+            aerodrone.goto_position_target_local_ned(self.vehicle,
+                                      self.vehicle.location.global_frame.lat, 
+                                       self.vehicle.location.global_frame.lon, 
+                                       self.vehicle.location.global_frame.alt + d)
+            # self.vehicle.commands.goto(LocationGlobal(self.vehicle.location.global_frame.lat, 
+            #                            self.vehicle.location.global_frame.lon, 
+            #                            self.vehicle.location.global_frame.alt + d))
 
     def land(self):
         self.vehicle.mode = dronekit.VehicleMode("LAND")
 
     def return_to_land(self):
-        return
+        self.vehicle.mode = dronekit.VehicleMode("RTL")
 
     def close(self):
         self.vehicle.close()
