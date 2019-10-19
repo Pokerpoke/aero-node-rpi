@@ -35,7 +35,7 @@ def index():
 @app.route('/connect')
 def connect():
     if not uav.connected:
-        uav.connect('udp:127.0.0.1:14550')
+        uav.connect('127.0.0.1:14550')
     if 'next_page' in session:
         r = session['next_page']
         session['next_page'] = ''
@@ -76,38 +76,60 @@ def goto():
     uav.goto(n, e, d)
     return ('done')
 
+
 @app.route('/goto/<direction>')
 def goto_direction(direction):
     if direction == 'north':
-        uav.goto(1,0,0)
+        uav.goto(1, 0, 0)
     elif direction == 'south':
-        uav.goto(-1,0,0)
+        uav.goto(-1, 0, 0)
     elif direction == 'east':
-        uav.goto(0,1,0)
+        uav.goto(0, 1, 0)
     elif direction == 'west':
-        uav.goto(0,-1,0)
+        uav.goto(0, -1, 0)
     elif direction == 'down':
-        uav.goto(0,0,1)
+        uav.goto(0, 0, 1)
     elif direction == 'up':
-        uav.goto(0,0,-1)
+        uav.goto(0, 0, -1)
     else:
         return ('bad operation')
     return('done')
-    
+
 
 @app.route('/status')
 def status():
     if uav.connected:
-        return jsonify(connected=uav.connected,
-                    mode=uav.vehicle.mode.name.lower(),
-                    pitch=uav.vehicle.attitude.pitch,
-                    roll=uav.vehicle.attitude.roll,
-                    yaw=uav.vehicle.attitude.yaw,
-                    lat=uav.vehicle.location.global_frame.lat,
-                    long=uav.vehicle.location.global_frame.lon,
-                    alt=uav.vehicle.location.global_frame.alt,
-                    armed=uav.vehicle.armed
-                    )
+        if uav.armed:
+            return jsonify(connected=uav.connected,
+                           mode=uav.mode,
+                           pitch=uav.pitch,
+                           roll=uav.roll,
+                           yaw=uav.yaw,
+                           lat=uav.lat,
+                           lon=uav.lon,
+                           alt=uav.alt,
+                           armable=uav.is_armable,
+                           armed=uav.armed,
+                           home_alt=uav.home_alt,
+                           home_lon=uav.home_lon,
+                           north=uav.north,
+                           east=uav.east,
+                           down=uav.down,
+                           )
+        else:
+            return jsonify(connected=uav.connected,
+                           mode=uav.mode,
+                           pitch=uav.pitch,
+                           roll=uav.roll,
+                           yaw=uav.yaw,
+                           lat=uav.lat,
+                           lon=uav.lon,
+                           alt=uav.alt,
+                           armable=uav.is_armable,
+                           armed=uav.armed,
+                           home_alt=uav.home_alt,
+                           home_lon=uav.home_lon,
+                           )
     else:
         return jsonify(connected=uav.connected)
 
